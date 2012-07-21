@@ -7,14 +7,14 @@ class BuscaCep::Correios
 
   BUSCA_CEP_MOBILE_URL = "http://m.correios.com.br/movel/buscaCepConfirma.do"
 
-  def self.buscar(endereco)
+  def self.buscar(endereco, open_timeout = 5, read_timeout = 5)
     url = URI.parse(BUSCA_CEP_MOBILE_URL)
     req = Net::HTTP::Post.new(url.path)
-    req.set_form_data({'cepEntrada' => endereco, 'metodo' => 'buscarCep'})
+    req.set_form_data({'cepEntrada' => endereco.encode('ISO-8859-1'), 'metodo' => 'buscarCep'})
 
     http = Net::HTTP.new(url.host, url.port)
-    http.open_timeout = 5
-    http.read_timeout = 5
+    http.open_timeout = open_timeout
+    http.read_timeout = read_timeout
 
     response = http.request(req)
     raise "A busca mobile de CEP através dos Correios está indisponível." unless response.kind_of?(Net::HTTPSuccess)
