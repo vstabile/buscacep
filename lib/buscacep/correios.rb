@@ -3,7 +3,7 @@
 require 'net/http'
 require 'nokogiri'
 
-class BuscaCep
+class BuscaCep::Correios
 
   BUSCA_CEP_MOBILE_URL = "http://m.correios.com.br/movel/buscaCepConfirma.do"
 
