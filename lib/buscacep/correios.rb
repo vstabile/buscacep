@@ -23,10 +23,12 @@ class BuscaCep::Correios
     raise "Endereço não encontrado para #{endereco}." unless doc.css('div:contains("Dados nao encontrados")')[0].nil?
 
     result = []
-    doc.css('div.caixacampobranco').each do |item|
-      street = item.css('.resposta:contains("Logradouro: ") + .respostadestaque')[0].content.strip
+    doc.xpath("//form[@id='frmCep']").xpath("div[@class='caixacampobranco' or @class='caixacampoazul']").each do |item|
+      street = item.css('.resposta:contains("Logradouro: ") + .respostadestaque,
+        .resposta:contains("Endereço: ") + .respostadestaque')[0].content.strip
       district = item.css('.resposta:contains("Bairro: ") + .respostadestaque')[0].content.strip
-      city_state = item.css('.resposta:contains("Localidade / UF: ") + .respostadestaque')[0].content
+      city_state = item.css('.resposta:contains("Localidade / UF: ") + .respostadestaque, 
+        .resposta:contains("Localidade/UF: ") + .respostadestaque')[0].content
       code = item.css('.resposta:contains("CEP: ") + .respostadestaque')[0].content
       city = city_state.partition("/")[0].strip
       state = city_state.partition("/")[2].strip
