@@ -26,6 +26,8 @@ class BuscaCep::Correios
     doc.xpath("//form[@id='frmCep']").xpath("div[@class='caixacampobranco' or @class='caixacampoazul']").each do |item|
       street = item.css('.resposta:contains("Logradouro: ") + .respostadestaque,
         .resposta:contains("Endereço: ") + .respostadestaque')[0].content.strip
+      # tratamento de endereço da rua, eliminação de parte desnecessária da string, 
+      street = clean_street_name street
       district = item.css('.resposta:contains("Bairro: ") + .respostadestaque')[0].content.strip
       city_state = item.css('.resposta:contains("Localidade / UF: ") + .respostadestaque, 
         .resposta:contains("Localidade/UF: ") + .respostadestaque')[0].content
@@ -37,5 +39,15 @@ class BuscaCep::Correios
     
     return result
   end
+
+  private
+
+    def self.clean_street_name street
+      street.chomp!(", s/n")
+      street.chomp!(" s/n")
+      street = street.split(" - ").first
+      street = street.split(" (Q ").first
+      street = street.split(" (Quadra").first
+    end
 
 end
