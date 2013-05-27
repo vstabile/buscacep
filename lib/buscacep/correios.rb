@@ -28,7 +28,8 @@ class BuscaCep::Correios
         .resposta:contains("Endereço: ") + .respostadestaque')[0].content.strip
       # tratamento de endereço da rua, eliminação de parte desnecessária da string, 
       street = clean_street_name street
-      district = item.css('.resposta:contains("Bairro: ") + .respostadestaque')[0].content.strip
+      district = item.css('.resposta:contains("Bairro: ") + .respostadestaque')[0]
+      district = district.content.strip if !district.nil?
       city_state = item.css('.resposta:contains("Localidade / UF: ") + .respostadestaque, 
         .resposta:contains("Localidade/UF: ") + .respostadestaque')[0].content
       code = item.css('.resposta:contains("CEP: ") + .respostadestaque')[0].content
